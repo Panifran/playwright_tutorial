@@ -99,7 +99,6 @@ def run(playwright: Playwright) -> None:
         #             pinn_op2FT = text[-1]
         #             print(f"pinn_op2FT: {pinn_op2FT}")
         #             break
-
         print(url)
         page.goto(url)
         page.reload()
