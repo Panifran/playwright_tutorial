@@ -21,7 +21,7 @@ def run(playwright: Playwright) -> None:
             'https://www.oddsportal.com/soccer/costa-rica/primera-division/san-carlos-herediano-2RZ73WDf/',
             'https://www.oddsportal.com/soccer/colombia/primera-a/atl-nacional-once-caldas-dbfb4etT/',
             'https://www.oddsportal.com/soccer/mexico/liga-mx/atlas-santos-laguna-0ji5VBIN/',
-            'https://www.oddsportal.com/soccer/mexico/liga-mx/atlas-santos-laguna-0ji5VBIN/']
+            'https://www.oddsportal.com/soccer/england/premier-league/fulham-tottenham-2qJCVjhg/']
 
     for url in urls:
         # OPENING Y CLOSING ODDS 1X2 FT
@@ -163,7 +163,7 @@ def run(playwright: Playwright) -> None:
                 pinn_op2HT = text[-1]
                 print(f"pinn_op2HT: {pinn_op2HT}")
 
-        # OPENING Y CLOSING ODDS OU 2.5 FT
+        # OPENING Y CLOSING ODDS OVER/UNDER FT
 
         url25 = f"{url}#over-under;2"
         print(url25)
@@ -172,6 +172,66 @@ def run(playwright: Playwright) -> None:
         table_containers = page.locator("//div[@class='relative flex flex-col']").all()
 
         for table_container in table_containers:
+
+            # OPENING Y CLOSING ODDS OVER/UNDER 1.5 FT
+            if "Over/Under +1.5" in table_container.text_content():
+                page.get_by_text("Over/Under +1.5").click()
+                odds_150_rows = table_container.locator(
+                    "xpath=div/div[@class='flex text-xs max-sm:h-[60px] h-9 border-b bg-gray-med_light border-bottom-solid']").all()
+                for elem in odds_150_rows:
+                    if len(elem.locator("xpath=div/a").all()) > 0:
+                        bookmaker = elem.locator("xpath=div/child::a[2]").text_content()
+                        if bookmaker == "bet365":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                bet365_clO15FT = odd_cells[0].text_content()
+                                bet365_clU15FT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opO15FT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opU15FT = text[-1]
+
+                                print(f"bet365_clO15FT: {bet365_clO15FT}")
+                                print(f"bet365_clU15FT: {bet365_clU15FT}")
+                                print(f"bet365_opO25FT: {bet365_opO15FT}")
+                                print(f"bet365_opU25FT: {bet365_opU15FT}")
+
+                        if bookmaker == "Pinnacle":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                pinn_clO15FT = odd_cells[0].text_content()
+                                pinn_clU15FT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opO15FT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opU15FT = text[-1]
+
+                                print(f"pinn_clO25FT: {pinn_clO15FT}")
+                                print(f"pinn_clU25FT: {pinn_clU15FT}")
+                                print(f"pinn_opO25FT: {pinn_opO15FT}")
+                                print(f"pinn_opU25FT: {pinn_opU15FT}")
+
+            # OPENING Y CLOSING ODDS OVER/UNDER 2.5 FT
             if "Over/Under +2.5" in table_container.text_content():
                 page.get_by_text("Over/Under +2.5").click()
                 odds_250_rows = table_container.locator(
