@@ -322,7 +322,6 @@ def run(playwright: Playwright) -> None:
                                 print(f"bet365_opO35FT: {bet365_opO35FT}")
                                 print(f"bet365_opU35FT: {bet365_opU35FT}")
 
-
                         if bookmaker == "Pinnacle":
                             odd_cells = elem.locator(
                                 "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
