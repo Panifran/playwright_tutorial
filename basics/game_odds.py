@@ -23,14 +23,8 @@ def run(playwright: Playwright) -> None:
             'https://www.oddsportal.com/soccer/mexico/liga-mx/atlas-santos-laguna-0ji5VBIN/',
             'https://www.oddsportal.com/soccer/mexico/liga-mx/atlas-santos-laguna-0ji5VBIN/']
 
-    # urls_ou25 = [
-    #     'https://www.oddsportal.com/soccer/colombia/primera-a/deportes-tolima-america-de-cali-I7ef5yRM/',
-    #     'https://www.oddsportal.com/soccer/costa-rica/primera-division/san-carlos-herediano-2RZ73WDf/#over-under;2',
-    #     'https://www.oddsportal.com/soccer/colombia/primera-a/atl-nacional-once-caldas-dbfb4etT/#over-under;2',
-    #     'https://www.oddsportal.com/soccer/mexico/liga-mx/atlas-santos-laguna-0ji5VBIN/#over-under;2',
-    #     'https://www.oddsportal.com/soccer/mexico/liga-mx/atlas-santos-laguna-0ji5VBIN/#over-under;2']
-
     for url in urls:
+        # OPENING Y CLOSING ODDS 1X2 FT
         print(url)
         page.goto(url)
 
@@ -98,6 +92,79 @@ def run(playwright: Playwright) -> None:
                 pinn_op2FT = text[-1]
                 print(f"pinn_op2FT: {pinn_op2FT}")
 
+        # OPENING Y CLOSING ODDS 1X2 HT
+
+        url_1X2_HT = f"{url}#1X2;3"
+        print(url_1X2_HT)
+        page.goto(url_1X2_HT)
+        page.reload()
+
+        rows = page.locator("xpath=//div[@class='flex text-xs max-sm:h-[60px] h-9 border-b']").all()
+
+        for row in rows:
+            bookmaker = row.locator("xpath=//div/child::a[2]").text_content()
+
+            if bookmaker == "bet365":
+                odd_cells = row.locator(
+                    "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-[#E0E0E0]'] | div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-[#E0E0E0]']").all()
+
+                bet365_cl1HT = odd_cells[0].text_content()
+                print(f"bet365_cl1HT: {bet365_cl1HT}")
+                bet365_clXHT = odd_cells[1].text_content()
+                print(f"bet365_clXHT: {bet365_clXHT}")
+                bet365_cl2HT = odd_cells[2].text_content()
+                print(f"bet365_cl2HT: {bet365_cl2HT}")
+
+                odd_cells[0].hover()
+
+                tooltip = page.locator(".tooltip")
+                text = tooltip.inner_text().split("\n")
+                bet365_op1HT = text[-1]
+                print(f"bet365_op1HT: {bet365_op1HT}")
+
+                odd_cells[1].hover()
+                tooltip = page.locator(".tooltip")
+                text = tooltip.inner_text().split("\n")
+                bet365_opXHT = text[-1]
+                print(f"bet365_opXHT: {bet365_opXHT}")
+
+                odd_cells[2].hover()
+                tooltip = page.locator(".tooltip")
+                text = tooltip.inner_text().split("\n")
+                bet365_op2HT = text[-1]
+                print(f"bet365_op2HT: {bet365_op2HT}")
+
+            if bookmaker == "Pinnacle":
+                odd_cells = row.locator(
+                    "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-[#E0E0E0]'] | div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-[#E0E0E0]']").all()
+
+                pinn_cl1HT = odd_cells[0].text_content()
+                print(f"pinn_cl1HT: {pinn_cl1HT}")
+                pinn_clHFT = odd_cells[1].text_content()
+                print(f"pinn_clHFT: {pinn_clHFT}")
+                pinn_cl2HT = odd_cells[2].text_content()
+                print(f"pinn_cl2HT: {pinn_cl2HT}")
+
+                odd_cells[0].hover()
+                tooltip = page.locator(".tooltip")
+                text = tooltip.inner_text().split("\n")
+                pinn_op1HT = text[-1]
+                print(f"pinn_op1HT: {pinn_op1HT}")
+
+                odd_cells[1].hover()
+                tooltip = page.locator(".tooltip")
+                text = tooltip.inner_text().split("\n")
+                pinn_opXHT = text[-1]
+                print(f"pinn_opXFT: {pinn_opXHT}")
+
+                odd_cells[2].hover()
+                tooltip = page.locator(".tooltip")
+                text = tooltip.inner_text().split("\n")
+                pinn_op2HT = text[-1]
+                print(f"pinn_op2HT: {pinn_op2HT}")
+
+        # OPENING Y CLOSING ODDS OU 2.5 FT
+
         url25 = f"{url}#over-under;2"
         print(url25)
         page.goto(url25)
@@ -161,11 +228,10 @@ def run(playwright: Playwright) -> None:
                                 print(f"pinn_clU25FT: {pinn_clU25FT}")
                                 print(f"pinn_opO25FT: {pinn_opO25FT}")
                                 print(f"pinn_opU25FT: {pinn_opU25FT}")
-                                break
-
 
     context.close()
     browser.close()
+
 
 with sync_playwright() as playwright:
     run(playwright)
