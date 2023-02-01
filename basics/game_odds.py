@@ -835,6 +835,118 @@ def run(playwright: Playwright) -> None:
                                 print(f"pinn_opAHM15HFT: {pinn_opAHM15HFT}")
                                 print(f"pinn_opAHM15AFT: {pinn_opAHM15AFT}")
 
+        # OPENING Y CLOSING ODDS BTTS FT
+        url_BTTS_FT = f"{url}#bts;2"
+        print(url_BTTS_FT)
+        page.goto(url_BTTS_FT)
+        page.reload()
+
+        rows = page.locator("xpath=//div[@class='flex text-xs max-sm:h-[60px] h-9 border-b']").all()
+
+        for row in rows:
+            if len(row.locator("xpath=div/a").all()) > 0:
+                bookmaker = row.locator("xpath=//div/child::a[2]").text_content()
+
+                if bookmaker == "bet365":
+                    odd_cells = row.locator(
+                        "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-[#E0E0E0]'] | div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-[#E0E0E0]']").all()
+
+                    bet365_clBTTSYFT = odd_cells[0].text_content()
+                    print(f"bet365_clBTTSYFT: {bet365_clBTTSYFT}")
+                    bet365_clBTTSNFT = odd_cells[1].text_content()
+                    print(f"bet365_clBTTSNFT: {bet365_clBTTSNFT}")
+
+                    odd_cells[0].hover()
+
+                    tooltip = page.locator(".tooltip")
+                    text = tooltip.inner_text().split("\n")
+                    bet365_opBTTSYFT = text[-1]
+                    print(f"bet365_opBTTSYFT: {bet365_opBTTSYFT}")
+
+                    odd_cells[1].hover()
+                    tooltip = page.locator(".tooltip")
+                    text = tooltip.inner_text().split("\n")
+                    bet365_opBTTSNFT = text[-1]
+                    print(f"bet365_opBTTSNFT: {bet365_opBTTSNFT}")
+
+                if bookmaker == "Pinnacle":
+                    odd_cells = row.locator(
+                        "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-[#E0E0E0]'] | div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-[#E0E0E0]']").all()
+
+                    pinn_clBTTSYFT = odd_cells[0].text_content()
+                    print(f"pinn_clBTTSYFT: {pinn_clBTTSYFT}")
+                    pinn_clBTTSNFT = odd_cells[1].text_content()
+                    print(f"pinn_clBTTSNFT: {pinn_clBTTSNFT}")
+
+                    odd_cells[0].hover()
+
+                    tooltip = page.locator(".tooltip")
+                    text = tooltip.inner_text().split("\n")
+                    pinn_opBTTSYFT = text[-1]
+                    print(f"pinn_opBTTSYFT: {pinn_opBTTSYFT}")
+
+                    odd_cells[1].hover()
+                    tooltip = page.locator(".tooltip")
+                    text = tooltip.inner_text().split("\n")
+                    pinn_opBTTSNFT = text[-1]
+                    print(f"pinn_opBTTSNFT: {pinn_opBTTSNFT}")
+
+        # OPENING Y CLOSING ODDS BTTS HT
+        url_BTTS_HT = f"{url}#bts;3"
+        print(url_BTTS_HT)
+        page.goto(url_BTTS_HT)
+        page.reload()
+
+        rows = page.locator("xpath=//div[@class='flex text-xs max-sm:h-[60px] h-9 border-b']").all()
+
+        for row in rows:
+            if len(row.locator("xpath=div/a").all()) > 0:
+                bookmaker = row.locator("xpath=//div/child::a[2]").text_content()
+
+                if bookmaker == "bet365":
+                    odd_cells = row.locator(
+                        "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-[#E0E0E0]'] | div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-[#E0E0E0]']").all()
+
+                    bet365_clBTTSYHT = odd_cells[0].text_content()
+                    print(f"bet365_clBTTSYHT: {bet365_clBTTSYHT}")
+                    bet365_clBTTSNHT = odd_cells[1].text_content()
+                    print(f"bet365_clBTTSNHT: {bet365_clBTTSNHT}")
+
+                    odd_cells[0].hover()
+
+                    tooltip = page.locator(".tooltip")
+                    text = tooltip.inner_text().split("\n")
+                    bet365_opBTTSYHT = text[-1]
+                    print(f"bet365_opBTTSYHT: {bet365_opBTTSYHT}")
+
+                    odd_cells[1].hover()
+                    tooltip = page.locator(".tooltip")
+                    text = tooltip.inner_text().split("\n")
+                    bet365_opBTTSNHT = text[-1]
+                    print(f"bet365_opBTTSNHT: {bet365_opBTTSNHT}")
+
+                if bookmaker == "Pinnacle":
+                    odd_cells = row.locator(
+                        "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-[#E0E0E0]'] | div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-[#E0E0E0]']").all()
+
+                    pinn_clBTTSYHT = odd_cells[0].text_content()
+                    print(f"pinn_clBTTSYHT: {pinn_clBTTSYHT}")
+                    pinn_clBTTSNHT = odd_cells[1].text_content()
+                    print(f"pinn_clBTTSNHT: {pinn_clBTTSNHT}")
+
+                    odd_cells[0].hover()
+
+                    tooltip = page.locator(".tooltip")
+                    text = tooltip.inner_text().split("\n")
+                    pinn_opBTTSYHT = text[-1]
+                    print(f"pinn_opBTTSYHT: {pinn_opBTTSYHT}")
+
+                    odd_cells[1].hover()
+                    tooltip = page.locator(".tooltip")
+                    text = tooltip.inner_text().split("\n")
+                    pinn_opBTTSNHT = text[-1]
+                    print(f"pinn_opBTTSNHT: {pinn_opBTTSNHT}")
+
     context.close()
     browser.close()
 
