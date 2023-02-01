@@ -2,7 +2,7 @@ from playwright.sync_api import Playwright, sync_playwright, expect
 
 
 def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=False, slow_mo=500)
+    browser = playwright.chromium.launch(headless=False, slow_mo=200)
     context = browser.new_context()
 
     page = context.new_page()
@@ -20,7 +20,6 @@ def run(playwright: Playwright) -> None:
     urls = ['https://www.oddsportal.com/soccer/colombia/primera-a/deportes-tolima-america-de-cali-I7ef5yRM/',
             'https://www.oddsportal.com/soccer/costa-rica/primera-division/san-carlos-herediano-2RZ73WDf/',
             'https://www.oddsportal.com/soccer/colombia/primera-a/atl-nacional-once-caldas-dbfb4etT/',
-            'https://www.oddsportal.com/soccer/mexico/liga-mx/atlas-santos-laguna-0ji5VBIN/',
             'https://www.oddsportal.com/soccer/england/premier-league/fulham-tottenham-2qJCVjhg/']
 
     for url in urls:
@@ -472,7 +471,369 @@ def run(playwright: Playwright) -> None:
                                 print(f"pinn_opO15HT: {pinn_opO15HT}")
                                 print(f"pinn_opU15HT: {pinn_opU15HT}")
 
+        # OPENING Y CLOSING ODDS ASIAN HANDICAP HT
+        url_AH_HT = f"{url}#ah;3"
+        print(url_AH_HT)
+        page.goto(url_AH_HT)
+        page.reload()
+        table_containers = page.locator("//div[@class='relative flex flex-col']").all()
 
+        for table_container in table_containers:
+            # OPENING Y CLOSING ODDS AH -0.5 HT
+            if "Asian Handicap -0.5" in table_container.text_content():
+                page.get_by_text("Asian Handicap -0.5", exact=True).click()
+                odds_AHm05_rows = table_container.locator(
+                    "xpath=div/div[@class='flex text-xs max-sm:h-[60px] h-9 border-b bg-gray-med_light border-bottom-solid']").all()
+                for elem in odds_AHm05_rows:
+                    if len(elem.locator("xpath=div/a").all()) > 0:
+                        bookmaker = elem.locator("xpath=div/child::a[2]").text_content()
+                        if bookmaker == "bet365":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                bet365_clAHm05HHT = odd_cells[0].text_content()
+                                bet365_clAHm05AHT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHm05HHT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHm05AHT = text[-1]
+
+                                print(f"bet365_clAHm05HHT: {bet365_clAHm05HHT}")
+                                print(f"bet365_clAHm05AHT: {bet365_clAHm05AHT}")
+                                print(f"bet365_opAHm05HHT: {bet365_opAHm05HHT}")
+                                print(f"bet365_opAHm05AHT: {bet365_opAHm05AHT}")
+
+                        if bookmaker == "Pinnacle":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                pinn_clAHm05HHT = odd_cells[0].text_content()
+                                pinn_clAHm05AHT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHm05HHT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHm05AHT = text[-1]
+
+                                print(f"pinn_clAHm05HHT: {pinn_clAHm05HHT}")
+                                print(f"pinn_clAHm05AHT: {pinn_clAHm05AHT}")
+                                print(f"pinn_opAHm05HHT: {pinn_opAHm05HHT}")
+                                print(f"pinn_opAHm05AHT: {pinn_opAHm05AHT}")
+
+            # OPENING Y CLOSING ODDS AH +0.5 HT
+            if "Asian Handicap +0.5" in table_container.text_content():
+                page.get_by_text("Asian Handicap +0.5", exact=True).click()
+                odds_AHM05_rows = table_container.locator(
+                    "xpath=div/div[@class='flex text-xs max-sm:h-[60px] h-9 border-b bg-gray-med_light border-bottom-solid']").all()
+                for elem in odds_AHM05_rows:
+                    if len(elem.locator("xpath=div/a").all()) > 0:
+                        bookmaker = elem.locator("xpath=div/child::a[2]").text_content()
+                        if bookmaker == "bet365":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                bet365_clAHM05HHT = odd_cells[0].text_content()
+                                bet365_clAHM05AHT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHM05HHT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHM05AHT = text[-1]
+
+                                print(f"bet365_clAHM05HHT: {bet365_clAHM05HHT}")
+                                print(f"bet365_clAHM05AHT: {bet365_clAHM05AHT}")
+                                print(f"bet365_opAHM05HHT: {bet365_opAHM05HHT}")
+                                print(f"bet365_opAHM05AHT: {bet365_opAHM05AHT}")
+
+                        if bookmaker == "Pinnacle":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                pinn_clAHM05HHT = odd_cells[0].text_content()
+                                pinn_clAHM05AHT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHM05HHT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHM05AHT = text[-1]
+
+                                print(f"pinn_clAHM05HHT: {pinn_clAHM05HHT}")
+                                print(f"pinn_clAHM05AHT: {pinn_clAHM05AHT}")
+                                print(f"pinn_opAHM05HHT: {pinn_opAHM05HHT}")
+                                print(f"pinn_opAHM05AHT: {pinn_opAHM05AHT}")
+
+        # OPENING Y CLOSING ODDS ASIAN HANDICAP FT
+        url_AH_FT = f"{url}#ah;2"
+        print(url_AH_FT)
+        page.goto(url_AH_FT)
+        page.reload()
+        table_containers = page.locator("//div[@class='relative flex flex-col']").all()
+
+        for table_container in table_containers:
+            # OPENING Y CLOSING ODDS AH -1.5 FT
+            if "Asian Handicap -1.5" in table_container.text_content():
+                page.get_by_text("Asian Handicap -1.5", exact=True).click()
+                odds_AHm15_rows = table_container.locator(
+                    "xpath=div/div[@class='flex text-xs max-sm:h-[60px] h-9 border-b bg-gray-med_light border-bottom-solid']").all()
+                for elem in odds_AHm15_rows:
+                    if len(elem.locator("xpath=div/a").all()) > 0:
+                        bookmaker = elem.locator("xpath=div/child::a[2]").text_content()
+                        if bookmaker == "bet365":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                bet365_clAHm15HFT = odd_cells[0].text_content()
+                                bet365_clAHm15AFT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHm15HFT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHm15AFT = text[-1]
+
+                                print(f"bet365_clAHm15HFT: {bet365_clAHm15HFT}")
+                                print(f"bet365_clAHm15AFT: {bet365_clAHm15AFT}")
+                                print(f"bet365_opAHm15HFT: {bet365_opAHm15HFT}")
+                                print(f"bet365_opAHm15AFT: {bet365_opAHm15AFT}")
+
+                        if bookmaker == "Pinnacle":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                pinn_clAHm15HFT = odd_cells[0].text_content()
+                                pinn_clAHm15AFT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHm15HFT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHm15AFT = text[-1]
+
+                                print(f"pinn_clAHm15HFT: {pinn_clAHm15HFT}")
+                                print(f"pinn_clAHm15AFT: {pinn_clAHm15AFT}")
+                                print(f"pinn_opAHm15HFT: {pinn_opAHm15HFT}")
+                                print(f"pinn_opAHm15AFT: {pinn_opAHm15AFT}")
+
+            # OPENING Y CLOSING ODDS AH -0.5 FT
+            if "Asian Handicap -0.5" in table_container.text_content():
+                page.get_by_text("Asian Handicap -0.5", exact=True).click()
+                odds_AHm05_rows = table_container.locator(
+                    "xpath=div/div[@class='flex text-xs max-sm:h-[60px] h-9 border-b bg-gray-med_light border-bottom-solid']").all()
+                for elem in odds_AHm05_rows:
+                    if len(elem.locator("xpath=div/a").all()) > 0:
+                        bookmaker = elem.locator("xpath=div/child::a[2]").text_content()
+                        if bookmaker == "bet365":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                bet365_clAHm05HFT = odd_cells[0].text_content()
+                                bet365_clAHm05AFT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHm05HFT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHm05AFT = text[-1]
+
+                                print(f"bet365_clAHm05HFT: {bet365_clAHm05HFT}")
+                                print(f"bet365_clAHm05AFT: {bet365_clAHm05AFT}")
+                                print(f"bet365_opAHm05HFT: {bet365_opAHm05HFT}")
+                                print(f"bet365_opAHm05AFT: {bet365_opAHm05AFT}")
+
+                        if bookmaker == "Pinnacle":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                pinn_clAHm05HFT = odd_cells[0].text_content()
+                                pinn_clAHm05AFT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHm05HFT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHm05AFT = text[-1]
+
+                                print(f"pinn_clAHm05HFT: {pinn_clAHm05HFT}")
+                                print(f"pinn_clAHm05AFT: {pinn_clAHm05AFT}")
+                                print(f"pinn_opAHm05HFT: {pinn_opAHm05HFT}")
+                                print(f"pinn_opAHm05AFT: {pinn_opAHm05AFT}")
+
+            # OPENING Y CLOSING ODDS AH +0.5 FT
+            if "Asian Handicap +0.5" in table_container.text_content():
+                page.get_by_text("Asian Handicap +0.5", exact=True).click()
+                odds_AHM05_rows = table_container.locator(
+                    "xpath=div/div[@class='flex text-xs max-sm:h-[60px] h-9 border-b bg-gray-med_light border-bottom-solid']").all()
+                for elem in odds_AHM05_rows:
+                    if len(elem.locator("xpath=div/a").all()) > 0:
+                        bookmaker = elem.locator("xpath=div/child::a[2]").text_content()
+                        if bookmaker == "bet365":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                bet365_clAHM05HFT = odd_cells[0].text_content()
+                                bet365_clAHM05AFT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHM05HFT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHM05AFT = text[-1]
+
+                                print(f"bet365_clAHM05HFT: {bet365_clAHM05HFT}")
+                                print(f"bet365_clAHM05AFT: {bet365_clAHM05AFT}")
+                                print(f"bet365_opAHM05HFT: {bet365_opAHM05HFT}")
+                                print(f"bet365_opAHM05AFT: {bet365_opAHM05AFT}")
+
+                        if bookmaker == "Pinnacle":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                pinn_clAHM05HFT = odd_cells[0].text_content()
+                                pinn_clAHM05AFT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHM05HFT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHM05AFT = text[-1]
+
+                                print(f"pinn_clAHM05HFT: {pinn_clAHM05HFT}")
+                                print(f"pinn_clAHM05AFT: {pinn_clAHM05AFT}")
+                                print(f"pinn_opAHM05HFT: {pinn_opAHM05HFT}")
+                                print(f"pinn_opAHM05AFT: {pinn_opAHM05AFT}")
+
+            # OPENING Y CLOSING ODDS AH +1.5 FT
+            if "Asian Handicap +1.5" in table_container.text_content():
+                page.get_by_text("Asian Handicap +1.5", exact=True).click()
+                odds_AHM15_rows = table_container.locator(
+                    "xpath=div/div[@class='flex text-xs max-sm:h-[60px] h-9 border-b bg-gray-med_light border-bottom-solid']").all()
+                for elem in odds_AHM15_rows:
+                    if len(elem.locator("xpath=div/a").all()) > 0:
+                        bookmaker = elem.locator("xpath=div/child::a[2]").text_content()
+                        if bookmaker == "bet365":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                bet365_clAHM15HFT = odd_cells[0].text_content()
+                                bet365_clAHM15AFT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHM15HFT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                bet365_opAHM15AFT = text[-1]
+
+                                print(f"bet365_clAHM15HFT: {bet365_clAHM15HFT}")
+                                print(f"bet365_clAHM15AFT: {bet365_clAHM15AFT}")
+                                print(f"bet365_opAHM15HFT: {bet365_opAHM15HFT}")
+                                print(f"bet365_opAHM15AFT: {bet365_opAHM15AFT}")
+
+                        if bookmaker == "Pinnacle":
+                            odd_cells = elem.locator(
+                                "xpath=div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] border-black-borders max-sm:border-l'] |" +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders'] | " +
+                                "div[@class='flex flex-col items-center justify-center gap-1 border-r min-w-[60px] max-sm:min-w-[55px] bg-[#ffcf0d] border-black-borders max-sm:border-l']").all()
+                            if len(odd_cells) >= 2:
+                                pinn_clAHM15HFT = odd_cells[0].text_content()
+                                pinn_clAHM15AFT = odd_cells[1].text_content()
+
+                                odd_cells[0].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHM15HFT = text[-1]
+
+                                odd_cells[1].hover()
+                                tooltip = page.locator(".tooltip")
+                                text = tooltip.inner_text().split("\n")
+                                pinn_opAHM15AFT = text[-1]
+
+                                print(f"pinn_clAHM15HFT: {pinn_clAHM15HFT}")
+                                print(f"pinn_clAHM15AFT: {pinn_clAHM15AFT}")
+                                print(f"pinn_opAHM15HFT: {pinn_opAHM15HFT}")
+                                print(f"pinn_opAHM15AFT: {pinn_opAHM15AFT}")
 
     context.close()
     browser.close()
